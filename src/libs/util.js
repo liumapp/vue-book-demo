@@ -16,3 +16,8 @@ Util.ajax = axios.create({
   baseURL: Util.apiPath
 })
 
+Util.ajax.interceptors.response.use(res => {
+  return res.data
+})
+
+export default Util
