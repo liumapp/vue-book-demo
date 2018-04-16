@@ -98,6 +98,19 @@ export default {
     //initialize
     this.getThemes()
     this.getRecommendList()
+    const $list = this.$refs.list
+    $list.addEventListener('scroll', () => {
+      if (this.type === 'daily' || this.isLoading) return ;
+      if (
+        $list.scrollTop + document.body.clientHeight >= $list.scrollHeight
+      ) {
+        this.dailyTime -= 86400000
+        this.getRecommendList()
+      }
+    })
+  },
+  beforeDestroy () {
+    this.removeEventListener('scroll')
   }
 }
 </script>
