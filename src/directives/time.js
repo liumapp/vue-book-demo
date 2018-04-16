@@ -68,7 +68,6 @@ var Time = {
 
 }
 
-
 export default {
   bind: function (el, binding) {
     el.innerHTML = Time.getFormatTime(binding.value * 1000)
