@@ -39,7 +39,46 @@ var Time = {
     var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
     var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
     return date.getFullYear() + '-' + month + '-' + day
+  },
+
+  // 转化时间
+  getFormatTime: function (timestamp) {
+    var now = this.getUnix()
+    var today = this.getTodayUnix()
+    var year = this.getYearUnix()
+    var timer = (now - timestamp) / 1000 // 转换为秒级时间
+    var tip = ''
+
+    if (timer <= 0) {
+      tip = '刚刚好'
+    } else if (Math.floor(timer/60) <= 0) {
+      tip = '刚刚好'
+    } else if (timer < 3600) {
+      tip = Math.floor(timer/60) + '分钟前'
+    } else if (timer >= 3600 && (timestamp - today >= 0)) {
+      tip = Math.ceil(timer/3600) + '小时前'
+    } else if (timer/86400 <= 31) {
+      tip = Math.ceil(timer/86400) + '天前'
+    } else {
+      tip = this.getLastDate(timestamp)
+    }
+
+    return tip
   }
 
-  
+}
+
+
+export default {
+  bind: function (el, binding) {
+    el.innerHTML = Time.getFormatTime(binding.value * 1000)
+    el.__timeout__ = setInterval(function () {
+      el.innerHTML = Time.getFormatTime(binding.value * 1000)
+    } , 60000)
+  },
+
+  unbind: function (el) {
+    clearInterval(el.__timeout__)
+    delete el.__timeout__
+  }
 }
