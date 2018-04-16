@@ -27,6 +27,9 @@ export default {
   data () {
     return {
       themes: [],
+      recommendList: [],
+      dailyTime: $.getTodayTime(),
+      isLoading: false,
       showThemes: false,
       type: 'recommend',
       list: [],
@@ -48,11 +51,26 @@ export default {
       $.ajax.get('theme/' + id).then(res => {
         this.list = res.stories.filter(item => item.type !== 1)
       })
+    },
+    handleToRecommend () {
+      this.type = 'recommend'
+      this.recommendList = []
+      this.dailyTime = $.getTodayTime()
+      this.getRecommendList()
+    },
+    getRecommendList () {
+      this.isLoading = true
+      const prevDay = $.prevDay(this.dailyTime + 86400000)
+      $.ajax.get('news/before/' + prevDay).then(res => {
+        this.recommendList.push(res)
+        this.isLoading = false
+      })
     }
   },
   mounted () {
     //initialize
     this.getThemes()
+    this.getRecommendList()
   }
 }
 </script>
