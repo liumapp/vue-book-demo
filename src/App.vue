@@ -8,7 +8,8 @@
            @click="showThemes = !showThemes">主题日报</div>
       <ul v-show="showThemes">
         <li v-for="item in themes">
-          <a :class="{ on: item.id === themeId && type === 'daily'}">{{ item.name }}</a>
+          <a :class="{ on: item.id === themeId && type === 'daily'}"
+             @click="handleToTheme(item.id)">{{ item.name }}</a>
         </li>
       </ul>
     </div>
@@ -28,6 +29,7 @@ export default {
       themes: [],
       showThemes: false,
       type: 'recommend',
+      list: [],
       themeId: 0
     }
   },
@@ -35,7 +37,16 @@ export default {
     getThemes () {
       //axios send get
       $.ajax.get('themes').then(res => {
-        this.themes = res.others;
+        this.themes = res.others
+      })
+    },
+    handleToTheme (id) {
+      //change menu type
+      this.type = 'daily'
+      this.themeId = id
+      this.list = []
+      $.ajax.get('theme/' + id).then(res => {
+        this.list = res.stories.filter(item => item.type !== 1)
       })
     }
   },
