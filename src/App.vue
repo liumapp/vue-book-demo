@@ -22,7 +22,8 @@
           <Item
             v-for="item in list.stories"
             :data="item"
-            :key="item.id">
+            :key="item.id"
+            @click.native="handleClick(item.id)">
           </Item>
         </div>
       </template>
@@ -30,19 +31,21 @@
         <Item
           v-for="item in list"
           :data="item"
-          :key="item.id">
+          :key="item.id"
+          @click.native="handleClick(item.id)">
         </Item>
       </template>
     </div>
-    <daily-article></daily-article>
+    <daily-article :id="articleId"></daily-article>
   </div>
 </template>
 
 <script>
 import $ from './libs/util'
 import Item from './components/item.vue'
+import dailyArticle from './components/daily-article.vue'
 export default {
-  components: {Item},
+  components: {Item, dailyArticle},
   name: 'App',
   data () {
     return {
@@ -53,7 +56,8 @@ export default {
       showThemes: false,
       type: 'recommend',
       list: [],
-      themeId: 0
+      themeId: 0,
+      articleId: 0
     }
   },
   methods: {
@@ -92,6 +96,9 @@ export default {
       if (month.substr(0, 1) === '0') month = month.substr(1, 1)
       if (day.substr(0, 1) === '0') day = day.substr(1, 1)
       return `${month} 月 ${day} 日`
+    },
+    handleClick (id) {
+      this.articleId = id
     }
   },
   mounted () {
